@@ -1,0 +1,9 @@
+export const UPDATE_PRODUCTS = "UPDATE_PRODUCTS";
+export const UPDATE_ServiceS = "UPDATE_ServiceS";
+export const UPDATE_CURRENT_Service = "UPDATE_CURRENT_Service";
+export const ADD_TO_CART = 'ADD_TO_CART';
+export const ADD_MULTIPLE_TO_CART = 'ADD_MULTIPLE_TO_CART';
+export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
+export const UPDATE_CART_QUANTITY = 'UPDATE_CART_QUANTITY';
+export const CLEAR_CART = 'CLEAR_CART';
+export const TOGGLE_CART = 'TOGGLE_CART';
