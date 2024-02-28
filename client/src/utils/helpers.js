@@ -7,64 +7,65 @@ export function pluralize(name, count) {
   
   export function idbPromise(storeName, method, object) {
     return new Promise((resolve, reject) => {
-      // open connection to the database `` with the version of 1
-      const request = window.indexedDB.open('move-mates', 2);
-  
-      // create variables to hold reference to the database, transaction (tx), and object store
-      let db, tx, store;
-  
-      // if version has changed (or if this is the first time using the database), 
-      request.onupgradeneeded = function(e) {
-        const db = request.result;
-        // create object store for each type of data and set "primary" key index to be the `_id` of the data
-        db.createObjectStore('products', { keyPath: '_id' });
-        db.createObjectStore('Services', { keyPath: '_id' });
-        db.createObjectStore('cart', { keyPath: '_id' });
-      };
-      // handle any errors with connecting
-      request.onerror = function(e) {
-        console.log('There was an error');
-      };
-  
-      // on database open success
-      request.onsuccess = function(e) {
-        // save a reference of the database to the `db` variable
-        db = request.result;
-        // open a transaction do whatever we pass into `storeName` (must match one of the object store names)
-        tx = db.transaction(storeName, 'readwrite');
-        // save a reference to that object store
-        store = tx.objectStore(storeName);
+          const request = window.indexedDB.open('move-mates', 2);
 
+               let db, tx, store;
   
-        // if there's any errors, let us know
-        db.onerror = function(e) {
-          console.log('error', e);
+      request.onupgradeneeded = function(e) {
+        const db = e.target.result;
+            if (!db.objectStoreNames.contains('products')) {
+                   db.createObjectStore('products', { keyPath: '_id' });
+            }
+            if (!db.objectStoreNames.contains('services')) { // Corrected Services to services for consistency
+                   db.createObjectStore('services', { keyPath: '_id' });
+           }
+            if (!db.objectStoreNames.contains('cart')) {
+                   db.createObjectStore('cart', { keyPath: '_id' });
+           }
         };
   
-        switch (method) {
-          case 'put':
-            store.put(object);
-            resolve(object);
-            break;
-          case 'get':
-            const all = store.getAll();
-            all.onsuccess = function() {
-              resolve(all.result);
-            };
-            break;
-          case 'delete':
-            store.delete(object._id);
-            break;
-          default:
-            console.log('No valid method');
-            break;
+      request.onerror = function(e) {
+        console.error('There was an error', e);
+           reject(e);
+      };
+  
+      request.onsuccess = function(e) {
+        db = e.target.result;
+        //  tx = db.transaction(storeName, 'readwrite');
+            store = tx.objectStore(storeName);
+         tx.onerror = function(e) {
+          reject(e);
+        };
+  
+        // Handling methods with promise resolution
+        try {
+          switch (method) {
+            case 'put':
+              store.put(object).onsuccess = function() {
+                resolve(object);
+              };
+              break;
+            case 'get':
+              store.getAll().onsuccess = function(e) {
+                resolve(e.target.result);
+              };
+              break;
+            case 'delete':
+              store.delete(object._id).onsuccess = function() {
+                resolve();
+              };
+              break;
+            default:
+              throw new Error('No valid method');
+          }
+        } catch (error) {
+          reject(error);
         }
   
-        // when the transaction is complete, close the connection
         tx.oncomplete = function() {
           db.close();
         };
       };
-  
     });
   }
+  

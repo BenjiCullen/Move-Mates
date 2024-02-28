@@ -1,14 +1,16 @@
 
-# Sneakerz-Seekerz
+# Move-mates
 
 
 
 ## Summary
-
+An application that helps in the ever troubling endevour of moving house
 
 
 ## User Story
-
+As i am currently moving house, i wanted to create an application that allows users the option to have all their moving needs all in one places to 
+make the issues of moving house a thing of the past. You can havve all of your moving supplies, furniture removal, cleaning and help in the moving 
+ process all in one place. 
 
 
 ## Tools Used
@@ -50,11 +52,9 @@
 
 # Installation & Database SetUp
 * To use this app npm init has to be called to create your package.json file.
-* The following necessary Npm dependencies must be installed to run the application properly: the needed dependencies will be found on the package.json file.
-* To properly install the database you must create at cluster on Mongodb atlas.
-* Run "npm run seed" to properly introduce seeded items"
-* Run "npm start" for the port to start listening with mongoose.
-This app is deployed on Heroku
+* Then use 'npm run seed' to seed the data base for the application
+* Once that has been completed, run 'npm start' inside of the CLI to run the application.
+
 
 
 
@@ -62,7 +62,7 @@ This app is deployed on Heroku
 # Heroku
 
 
-[Check our app here]
+[Check my app here]
 
 
 # License
